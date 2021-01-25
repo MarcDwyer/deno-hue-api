@@ -9,7 +9,7 @@ type CreateSuccess = {
   username: string;
 };
 /**
- *
+ * If you do not have a username, one must be created and authorized
  * @param username can be any name
  * @param bridge
  */
