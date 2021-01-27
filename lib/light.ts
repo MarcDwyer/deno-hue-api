@@ -1,6 +1,7 @@
 import { LightStatusResp } from "./types/light_responses.ts";
 import { LightInfo } from "./types/light_types.ts";
 import { HueFetch } from "./util.ts";
+
 type LightActionConfig = {
   fetch: HueFetch;
   id: number | string;
