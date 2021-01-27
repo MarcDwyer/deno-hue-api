@@ -1,4 +1,4 @@
-export type Light = {
+export type LightInfo = {
   state: LightState;
   swupdate: SWUpdate;
   type: string;
@@ -14,7 +14,7 @@ export type Light = {
   productid: string;
 };
 export type Lights = {
-  [lightId: string]: Light;
+  [lightId: string]: LightInfo;
 };
 export type LightConfig = {
   archetype: string;
@@ -31,10 +31,17 @@ export type SWUpdate = {
   state: string;
   lastinstall: Date;
 };
-export type LightState = {
+export interface LightState {
   on: boolean;
   bri: number;
   alert: string;
   mode: string;
   reachable: boolean;
-};
+}
+
+export interface LightStateChange {
+  xy: [x: number, y: number];
+  sat: number;
+  ct: number;
+  on: boolean;
+}
