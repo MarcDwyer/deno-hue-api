@@ -32,7 +32,11 @@ export function xyBriToRgb(x: number, y: number, bri: number) {
   return result;
 }
 
-export function RGBtoXY(red: number, green: number, blue: number) {
+export function RGBtoXY(
+  red: number,
+  green: number,
+  blue: number
+): [x: number, y: number] {
   red =
     red > 0.04045 ? Math.pow((red + 0.055) / (1.0 + 0.055), 2.4) : red / 12.92;
   green =

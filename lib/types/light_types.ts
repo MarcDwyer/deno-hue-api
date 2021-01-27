@@ -16,15 +16,28 @@ export type LightInfo = {
 export type Lights = {
   [lightId: string]: LightInfo;
 };
+
 export type LightConfig = {
   archetype: string;
   function: string;
   direction: string;
-  startup: { mode: string; configured: boolean };
+  startup: {
+    mode: string;
+    configured: boolean;
+  };
 };
+/**
+ * If property colorgamut exists, the bulb is color capable.
+ */
 export type Capabilities = {
   certified: boolean;
-  control: { mindimlevel: number; maxlumen: number };
+  control: {
+    mindimlevel: number;
+    maxlumen: number;
+    colorgamuttype?: string;
+    colorgamut?: string;
+    ct?: [min: number, max: number];
+  };
   streaming: { renderer: boolean; proxy: boolean };
 };
 export type SWUpdate = {
@@ -40,8 +53,8 @@ export interface LightState {
 }
 
 export interface LightStateChange {
-  xy: [x: number, y: number];
-  sat: number;
-  ct: number;
-  on: boolean;
+  xy?: [x: number, y: number];
+  sat?: number;
+  ct?: number;
+  on?: boolean;
 }

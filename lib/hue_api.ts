@@ -1,11 +1,11 @@
-import { Light } from "./light.ts";
+import { LightApi } from "./light.ts";
 import { Groups } from "./types/group_types.ts";
 import { Lights } from "./types/light_types.ts";
 import { HueFetch, hueFetch } from "./util.ts";
 
 export class HueApi {
   fetch: HueFetch;
-  lights: Map<string, Light> | null = null;
+  lights: Map<string, LightApi> | null = null;
 
   constructor(username: string, hostname: string) {
     this.fetch = hueFetch(`http://${hostname}/api/${username}`);
@@ -13,8 +13,8 @@ export class HueApi {
   async loadLights() {
     const payload = await this.fetch<Lights>("/lights");
     const lights = Object.entries(payload).reduce(
-      (map: Map<string, Light>, [k, lightInfo]) => {
-        const light = new Light({
+      (map: Map<string, LightApi>, [k, lightInfo]) => {
+        const light = new LightApi({
           fetch: this.fetch,
           id: k,
           info: lightInfo,

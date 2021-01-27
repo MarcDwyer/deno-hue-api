@@ -1,5 +1,6 @@
+import { RGBtoXY } from "./colors.ts";
 import { LightStatusResp } from "./types/light_responses.ts";
-import { LightInfo } from "./types/light_types.ts";
+import { LightInfo, LightStateChange } from "./types/light_types.ts";
 import { HueFetch } from "./util.ts";
 
 type LightActionConfig = {
@@ -7,7 +8,12 @@ type LightActionConfig = {
   id: number | string;
   info: LightInfo;
 };
-export class Light {
+export type ColorChange = {
+  r: number;
+  g: number;
+  b: number;
+};
+export class LightApi {
   info: LightInfo;
   id: number | string;
   fetch: HueFetch;
@@ -16,9 +22,10 @@ export class Light {
     this.id = id;
     this.info = info;
   }
-
-  private async changePowerState(on: boolean) {
-    const body = { on };
+  get isColor() {
+    return Boolean(this.info.capabilities.control.colorgamut);
+  }
+  private async sendChange(body: LightStateChange) {
     const { id } = this;
     const resp = await this.fetch<LightStatusResp[]>(`/lights/${id}/state`, {
       method: "PUT",
@@ -32,9 +39,21 @@ export class Light {
     return succ;
   }
   on() {
-    return this.changePowerState(true);
+    return this.sendChange({ on: true });
   }
   off() {
-    return this.changePowerState(false);
+    return this.sendChange({ on: false });
+  }
+  async changeColorRGB({ r, g, b }: ColorChange) {
+    if (!this.isColor)
+      throw `Light: ${this.id}. Does not have color capabilities`;
+    const xy = RGBtoXY(r, g, b);
+
+    try {
+      const resp = await this.sendChange({ xy });
+      console.log(resp);
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
