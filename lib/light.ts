@@ -8,11 +8,7 @@ type LightActionConfig = {
   id: number | string;
   info: LightInfo;
 };
-export type ColorChange = {
-  r: number;
-  g: number;
-  b: number;
-};
+export type ColorChange = [r: number, g: number, b: number];
 export class LightApi {
   info: LightInfo;
   id: number | string;
@@ -34,7 +30,7 @@ export class LightApi {
     if (!resp.length) throw `Empty response from ${id}`;
     const succ = resp[0];
     if ("error" in succ) {
-      throw `Error setting: ${id}`;
+      throw succ["error"];
     }
     return succ;
   }
@@ -44,11 +40,10 @@ export class LightApi {
   off() {
     return this.sendChange({ on: false });
   }
-  async changeColorRGB({ r, g, b }: ColorChange) {
+  async changeColorRGB(rgb: ColorChange) {
     if (!this.isColor)
       throw `Light: ${this.id}. Does not have color capabilities`;
-    const xy = RGBtoXY(r, g, b);
-
+    const xy = RGBtoXY(...rgb);
     try {
       const resp = await this.sendChange({ xy });
       console.log(resp);
