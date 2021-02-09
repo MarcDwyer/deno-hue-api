@@ -1,4 +1,4 @@
-import { LightApi } from "../light.ts";
+import { LightApi } from "../light_api.ts";
 
 export type Group = {
   name: string;

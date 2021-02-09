@@ -20,13 +20,13 @@ export class LightApi {
     this.info = info;
   }
   get isColor() {
-    return Boolean(this.info.capabilities.control.colorgamut);
+    return "colormode" in this.info.state;
   }
-  private async sendChange(body: LightStateChange) {
+  private async sendChange(change: LightStateChange) {
     const { id } = this;
     const resp = await this.fetch<LightStatusResp[]>(`/lights/${id}/state`, {
       method: "PUT",
-      body: JSON.stringify(body),
+      body: JSON.stringify(change),
     });
     if (!resp.length) throw `Empty response from ${id}`;
     const succ = resp[0];
@@ -47,7 +47,7 @@ export class LightApi {
     const xy = RGBtoXY(...rgb);
     try {
       const resp = await this.sendChange({ xy });
-      console.log(resp);
+      return resp;
     } catch (e) {
       console.error(e);
     }

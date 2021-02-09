@@ -8,14 +8,16 @@ try {
   const jsonData = decoder.decode(reader);
   const creds: Credentials = JSON.parse(jsonData);
 
-  console.log(creds);
   const bridge = await connectToBridge(creds);
   const groups = await bridge.getGroups();
   const groupName = "Upstairs room";
   for (const group of groups.values()) {
     if (group.name === groupName) {
       for (const light of group.lights) {
-        light.off();
+        if (light.isColor) {
+          light.changeColorRGB([217, 125, 87]);
+        }
+        light.on();
       }
     }
   }
