@@ -1,6 +1,8 @@
+import { LightApi } from "../light.ts";
+
 export type Group = {
   name: string;
-  lights: string[];
+  lights: string[] | LightApi[];
   sensors: any[];
   type: string;
   state: { all_on: boolean; any_on: boolean };
@@ -24,3 +26,8 @@ export type GroupAction = {
 export type Groups = {
   [groupId: string]: Group;
 };
+
+export interface MyGroup extends Group {
+  lights: LightApi[];
+}
+export type GroupMap = Map<string, MyGroup>;

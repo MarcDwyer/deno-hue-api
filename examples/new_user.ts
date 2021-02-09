@@ -1,18 +1,37 @@
 import { createUser } from "../lib/create_user.ts";
 import { discoverBridges } from "../lib/discovery.ts";
-import { HueApi } from "../lib/hue_api.ts";
+import { connectToBridge, Credentials } from "../lib/hue_api.ts";
+
+const yourUsername = "marcdeno";
 
 try {
   const disc = await discoverBridges();
-  const bridge = disc[0];
-  console.log(bridge);
+  const bridgeData = disc[0];
 
-  const { username } = await createUser("marcdeno", bridge);
-  console.log({ username, ip: bridge.internalipaddress });
+  const { username } = await createUser(yourUsername, bridgeData);
+  const credentials: Credentials = {
+    username,
+    bridgeIp: bridgeData.internalipaddress,
+  };
 
-  const hueApi = new HueApi(username, bridge.internalipaddress);
+  /**
+   * Store your credentials so we can sign in as an existing user
+   * in the future
+   */
+  const write = Deno.writeTextFile(
+    "../bridge_data.json",
+    JSON.stringify(credentials)
+  );
 
-  console.log(await hueApi.getGroups());
+  await write;
+
+  /**
+   * Now that we have the proper credentials and have saved it.
+   * We can now receive data from the bridge
+   */
+
+  const bridge = await connectToBridge(credentials);
+  console.log(bridge.lights);
 } catch (e) {
   console.error(e);
 }
