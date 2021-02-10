@@ -1,4 +1,4 @@
-import { RGB, RGBtoXY, XYB, xyBriToRgb } from "./colors.ts";
+import { RGB, RGBtoXY, XYB, xyBriToRgb } from "./color_converters.ts";
 import { LightStatusResp } from "./types/light_responses.ts";
 import { LightInfo, LightStateChange } from "./types/light_types.ts";
 import { HueFetch } from "./util.ts";

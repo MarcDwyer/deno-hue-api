@@ -1,4 +1,3 @@
-// export type XYB = [x: number, y: number];
 export type XYB = [x: number, y: number, bri: number];
 export type RGB = [r: number, g: number, b: number];
 export type XY = [x: number, y: number];
