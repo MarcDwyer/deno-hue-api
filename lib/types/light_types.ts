@@ -50,6 +50,11 @@ export interface LightState {
   alert: string;
   mode: string;
   reachable: boolean;
+  xy: [x: number, y: number];
+  colormode?: string;
+  ct: number;
+  sat: number;
+  hue: number;
 }
 
 export interface LightStateChange {

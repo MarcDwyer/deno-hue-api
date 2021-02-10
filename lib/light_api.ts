@@ -1,4 +1,4 @@
-import { RGBtoXY } from "./colors.ts";
+import { RGB, RGBtoXY, XYB, xyBriToRgb } from "./colors.ts";
 import { LightStatusResp } from "./types/light_responses.ts";
 import { LightInfo, LightStateChange } from "./types/light_types.ts";
 import { HueFetch } from "./util.ts";
@@ -13,7 +13,8 @@ export type ColorChange = [r: number, g: number, b: number];
 export class LightApi {
   info: LightInfo;
   id: number | string;
-  fetch: HueFetch;
+
+  private fetch: HueFetch;
   constructor({ fetch, id, info }: LightActionConfig) {
     this.fetch = fetch;
     this.id = id;
@@ -33,6 +34,7 @@ export class LightApi {
     if ("error" in succ) {
       throw succ["error"];
     }
+    this.info.state = { ...this.info.state, ...change };
     return succ;
   }
   on() {
@@ -41,15 +43,24 @@ export class LightApi {
   off() {
     return this.sendChange({ on: false });
   }
-  async changeColorRGB(rgb: ColorChange) {
+  async changeColorRGB(rgb: RGB) {
     if (!this.isColor)
       throw `Light: ${this.id}. Does not have color capabilities`;
-    const xy = RGBtoXY(...rgb);
+    const xy = RGBtoXY(rgb);
     try {
       const resp = await this.sendChange({ xy });
       return resp;
     } catch (e) {
       console.error(e);
     }
+  }
+  get currentColor(): RGB {
+    if (!this.isColor) {
+      return [255, 255, 255];
+    }
+    const { state } = this.info;
+    const [x, y] = state.xy;
+    const xyb: XYB = [x, y, state.bri];
+    return xyBriToRgb(xyb);
   }
 }

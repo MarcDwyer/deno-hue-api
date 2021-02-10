@@ -1,4 +1,8 @@
-export function xyBriToRgb(x: number, y: number, bri: number) {
+// export type XYB = [x: number, y: number];
+export type XYB = [x: number, y: number, bri: number];
+export type RGB = [r: number, g: number, b: number];
+export type XY = [x: number, y: number];
+export function xyBriToRgb([x, y, bri]: XYB): RGB {
   var z = 1.0 - x - y;
   var Y = bri / 255.0; // Brightness of lamp
   var X = (Y / y) * x;
@@ -29,14 +33,10 @@ export function xyBriToRgb(x: number, y: number, bri: number) {
     b = 255;
   }
   const result = [Math.round(r), Math.round(g), Math.round(b)];
-  return result;
+  return result as RGB;
 }
 
-export function RGBtoXY(
-  red: number,
-  green: number,
-  blue: number
-): [x: number, y: number] {
+export function RGBtoXY([red, green, blue]: RGB): XY {
   red =
     red > 0.04045 ? Math.pow((red + 0.055) / (1.0 + 0.055), 2.4) : red / 12.92;
   green =
