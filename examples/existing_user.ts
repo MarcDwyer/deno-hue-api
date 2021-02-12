@@ -11,7 +11,7 @@ try {
   const bridge = await connectToBridge(creds);
   if (bridge.lights) {
     for (const light of bridge.lights?.values()) {
-      light.on();
+      console.log(await light.on());
     }
   }
   const groups = await bridge.getGroups();
@@ -19,7 +19,8 @@ try {
   for (const group of groups.values()) {
     if (group.name === groupName) {
       for (const light of group.lights) {
-        console.log(await light.off());
+        // console.log(await light.changeColorRGB([222,202,241]));
+        light.off();
       }
     }
   }

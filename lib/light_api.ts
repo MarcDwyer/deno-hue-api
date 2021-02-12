@@ -8,7 +8,6 @@ type LightActionConfig = {
   id: number | string;
   info: LightInfo;
 };
-export type ColorChange = [r: number, g: number, b: number];
 
 export class LightApi {
   info: LightInfo;
